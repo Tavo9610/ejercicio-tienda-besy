@@ -14,8 +14,6 @@ public class Producto {
         this.categoria = categoria;
     }
 
-    //
-
     public Integer getCodigo(){
         return codigo;
     }
@@ -32,7 +30,6 @@ public class Producto {
         return categoria;
     }
 
-    //
 
     public void setCodigo(Integer codigo) {
         this.codigo = codigo;

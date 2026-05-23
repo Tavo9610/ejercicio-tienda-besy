@@ -12,8 +12,6 @@ public class Vendedor {
         this.sueldo = sueldo;
     }
 
-    //
-
     public Integer getCodigo(){
         return codigo;
     }
@@ -26,7 +24,6 @@ public class Vendedor {
         return sueldo;
     }
 
-    //
 
     public void setCodigo(Integer codigo){
         this.codigo = codigo;
