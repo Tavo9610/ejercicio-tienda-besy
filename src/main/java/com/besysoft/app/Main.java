@@ -1,8 +1,8 @@
 package com.besysoft.app;
-
 import com.besysoft.model.Producto;
 import com.besysoft.model.Vendedor;
 import com.besysoft.service.TiendaService;
+import com.besysoft.exception.DatoInvalidoException;
 
 import java.util.Scanner;
 
@@ -23,6 +23,10 @@ public class Main {
             System.out.println("4 - Mostrar vendedores");
             System.out.println("5 - Registrar Venta");
             System.out.println("6 - Mostrar ventas");
+            System.out.println("7 - Buscar producto por categoria");
+            System.out.println("8 - Buscar producto por nombre");
+            System.out.println("9 - Buscar producto por codigo");
+            System.out.println("10- Calcular comision");
             System.out.println("0 - Salir");
 
             opcion = entrada.nextInt();
@@ -100,6 +104,34 @@ public class Main {
 
                 case 6:
                     service.mostrarVentas();
+                    break;
+
+                case 7:
+                    entrada.nextLine();
+                    System.out.println("Ingrese categoria: ");
+                    String categoriaBusqueda = entrada.nextLine();
+                    service.buscarProductoPorCategoria(categoriaBusqueda);
+                    break;
+                case 8:
+
+                    entrada.nextLine();
+                    System.out.println("Ingrese nombre del producto: ");
+                    String nombreBusqueda = entrada.nextLine();
+                    service.buscarProductoPorNombre(nombreBusqueda);
+                    break;
+
+                case 9:
+
+                    System.out.println("Ingrese codigo de producto: ");
+                    Integer codigoBusqueda = entrada.nextInt();
+                    service.buscarProductoPorCodigo(codigoBusqueda);
+                    break;
+
+                case 10:
+
+                    System.out.println("Ingrese codigo del vendedor: ");
+                    Integer codigoComision = entrada.nextInt();
+                    service.calcularComision(codigoComision);
                     break;
 
                 case 0:
