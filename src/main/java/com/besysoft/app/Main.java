@@ -1,19 +1,23 @@
 package com.besysoft.app;
+import com.besysoft.exception.ProductoNoEncontradoException;
+import com.besysoft.exception.VendedorNoEncontradoException;
+import com.besysoft.exception.VentaInvalidaException;
 import com.besysoft.model.Producto;
 import com.besysoft.model.Vendedor;
 import com.besysoft.service.TiendaService;
-import com.besysoft.exception.DatoInvalidoException;
-
+import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
+
     public static void main(String[] args) {
 
-        TiendaService service = new TiendaService(); //creo un obj de la clase TiendaService
+        TiendaService service = new TiendaService();
         Scanner entrada = new Scanner(System.in);
-        int opcion;
+
+        int opcion = -1;
+
         do {
 
             System.out.println("\n===== TIENDA BESYSOFT =====");
@@ -21,135 +25,140 @@ public class Main {
             System.out.println("2 - Agregar vendedor");
             System.out.println("3 - Mostrar productos");
             System.out.println("4 - Mostrar vendedores");
-            System.out.println("5 - Registrar Venta");
+            System.out.println("5 - Registrar venta");
             System.out.println("6 - Mostrar ventas");
-            System.out.println("7 - Buscar producto por categoria");
+            System.out.println("7 - Buscar producto por categoría");
             System.out.println("8 - Buscar producto por nombre");
-            System.out.println("9 - Buscar producto por codigo");
-            System.out.println("10- Calcular comision");
+            System.out.println("9 - Buscar producto por código");
+            System.out.println("10 - Calcular comisión");
             System.out.println("0 - Salir");
 
-            opcion = entrada.nextInt();
+            try {
+                opcion = entrada.nextInt();
+                entrada.nextLine();
+                switch (opcion) {
+                    case 1 -> {
+                        try {
+                            System.out.println("Código:");
+                            int codigo = entrada.nextInt();
+                            entrada.nextLine();
+                            System.out.println("Nombre:");
+                            String nombre = entrada.nextLine();
+                            System.out.println("Precio:");
+                            double precio = entrada.nextDouble();
+                            entrada.nextLine();
+                            System.out.println("Categoría:");
+                            String categoria = entrada.nextLine();
+                            service.agregarProducto(new Producto(codigo, nombre, precio, categoria));
+                            System.out.println("Producto agregado correctamente");
+                        } catch (VentaInvalidaException e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                    }
+                    case 2 -> {
+                        System.out.println("Código:");
+                        int codigo = entrada.nextInt();
+                        entrada.nextLine();
+                        System.out.println("Nombre:");
+                        String nombre = entrada.nextLine();
+                        System.out.println("Sueldo:");
+                        double sueldo = entrada.nextDouble();
+                        service.agregarVendedor(new Vendedor(codigo, nombre, sueldo));
+                        System.out.println("Vendedor agregado correctamente");
+                    }
+                    case 3 -> {
+                        List<Producto> productos = service.mostrarProductos();
+                        if (productos.isEmpty()) {
+                            System.out.println("No hay productos");
+                        } else {
+                            productos.forEach(System.out::println);
+                        }
+                    }
+                    case 4 -> {
+                        List<Vendedor> vendedores = service.mostrarVendedores();
+                        if (vendedores.isEmpty()) {
+                            System.out.println("No hay vendedores");
+                        } else {
+                            vendedores.forEach(System.out::println);
+                        }
+                    }
+                    case 5 -> {
+                        try {
+                            System.out.println("Código producto:");
+                            int codProd = entrada.nextInt();
+                            System.out.println("Código vendedor:");
+                            int codVend = entrada.nextInt();
+                            service.registrarVenta(codProd, codVend);
+                            System.out.println("Venta registrada correctamente");
+                        } catch (ProductoNoEncontradoException | VendedorNoEncontradoException e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                    }
+                    case 6 -> {
+                        var ventas = service.mostrarVentas();
+                        if (ventas.isEmpty()) {
+                            System.out.println("No hay ventas");
+                        } else {
+                            ventas.forEach(System.out::println);
+                        }
+                    }
+                    case 7 -> {
+                        System.out.println("Categoría:");
+                        String categoria = entrada.nextLine();
+                        var resultado = service.buscarProductoPorCategoria(categoria);
+                        if (resultado.isEmpty()) {
+                            System.out.println("No se encontraron productos");
+                        } else {
+                            resultado.forEach(System.out::println);
+                        }
+                    }
+                    case 8 -> {
+                        System.out.println("Nombre:");
+                        String nombre = entrada.nextLine();
+                        var resultado = service.buscarProductoPorNombre(nombre);
+                        if (resultado.isEmpty()) {
+                            System.out.println("No se encontraron productos");
+                        } else {
+                            resultado.forEach(System.out::println);
+                        }
+                    }
+                    case 9 -> {
+                        try {
+                            System.out.println("Código:");
+                            int codigo = entrada.nextInt();
 
-            switch (opcion){
+                            Producto producto = service.buscarProductoPorCodigo(codigo);
 
-                case 1:
-                    System.out.println("Ingrese código:");
-                    Integer codigoProducto = entrada.nextInt();
+                            System.out.println(producto);
 
-                    entrada.nextLine();
+                        } catch (ProductoNoEncontradoException e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                    }
+                    case 10 -> {
+                        try {
+                            System.out.println("Código vendedor:");
+                            int codigo = entrada.nextInt();
 
-                    System.out.println("Ingrese nombre:");
-                    String nombreProducto = entrada.nextLine();
+                            Double comision = service.calcularComision(codigo);
+                            System.out.println("La Comisión total de sus ventas es: " + comision);
 
-                    System.out.println("Ingrese precio:");
-                    Double precioProducto = entrada.nextDouble();
+                        } catch (VentaInvalidaException e) {
+                            System.out.println("Error: " + e.getMessage());
+                        }
+                    }
+                    case 0 -> System.out.println("Saliendo del sistema...");
 
-                    entrada.nextLine();
+                    default -> System.out.println("Opción inválida");
+                }
 
-                    System.out.println("Ingrese categoría:");
-                    String categoriaProducto = entrada.nextLine();
-
-                    Producto producto = new Producto(
-                            codigoProducto,
-                            nombreProducto,
-                            precioProducto,
-                            categoriaProducto
-                    );
-
-                    service.agregarProducto(producto);
-                    break;
-
-                case 2:
-                    System.out.println("Ingrese código:");
-                    Integer codigoVendedor = entrada.nextInt();
-
-                    entrada.nextLine();
-
-                    System.out.println("Ingrese nombre:");
-                    String nombreVendedor = entrada.nextLine();
-
-                    System.out.println("Ingrese sueldo:");
-                    Double sueldoVendedor = entrada.nextDouble();
-
-                    Vendedor vendedor = new Vendedor(
-                            codigoVendedor,
-                            nombreVendedor,
-                            sueldoVendedor
-                    );
-
-                    service.agregarVendedor(vendedor);
-                    break;
-
-                case 3:
-                    service.mostrarProductos();
-                    break;
-
-                case 4:
-                    service.mostrarVendedores();
-                    break;
-
-                case 5:
-                    System.out.println("Ingrese código producto:");
-                    Integer codigoProductoVenta = entrada.nextInt();
-
-                    System.out.println("Ingrese código vendedor:");
-                    Integer codigoVendedorVenta = entrada.nextInt();
-
-                    service.registrarVenta(
-                            codigoProductoVenta,
-                            codigoVendedorVenta
-                    );
-                    break;
-
-                case 6:
-                    service.mostrarVentas();
-                    break;
-
-                case 7:
-                    entrada.nextLine();
-                    System.out.println("Ingrese categoria: ");
-                    String categoriaBusqueda = entrada.nextLine();
-                    service.buscarProductoPorCategoria(categoriaBusqueda);
-                    break;
-                case 8:
-
-                    entrada.nextLine();
-                    System.out.println("Ingrese nombre del producto: ");
-                    String nombreBusqueda = entrada.nextLine();
-                    service.buscarProductoPorNombre(nombreBusqueda);
-                    break;
-
-                case 9:
-
-                    System.out.println("Ingrese codigo de producto: ");
-                    Integer codigoBusqueda = entrada.nextInt();
-                    service.buscarProductoPorCodigo(codigoBusqueda);
-                    break;
-
-                case 10:
-
-                    System.out.println("Ingrese codigo del vendedor: ");
-                    Integer codigoComision = entrada.nextInt();
-                    service.calcularComision(codigoComision);
-                    break;
-
-                case 0:
-
-                    System.out.println("Saliendo del sistema...");
-                    break;
-
-
-                default:
-
-                    System.out.println("Opción no valida");
-
+            } catch (InputMismatchException e) {
+                System.out.println("Error: debe ingresar un número válido y no texto");
+                entrada.nextLine();
+                opcion = -1;
             }
+        } while (opcion != 0);
 
-        } while(opcion != 0);
-
-        entrada.close(); //cerre el recurso Scanner
-
+        entrada.close(); //esto para cerrar el Scanner y dejar de consumir recursos
     }
-
 }

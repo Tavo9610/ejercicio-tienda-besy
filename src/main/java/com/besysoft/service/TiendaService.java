@@ -1,193 +1,97 @@
 package com.besysoft.service;
+import com.besysoft.exception.ProductoNoEncontradoException;
+import com.besysoft.exception.VendedorNoEncontradoException;
+import com.besysoft.exception.VentaInvalidaException;
+import com.besysoft.model.*;
+import com.besysoft.repository.*;
 
-import com.besysoft.model.Producto;
-import com.besysoft.model.Vendedor;
-import com.besysoft.model.Venta;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class TiendaService {
 
-    /*
-    * creo listas para guardar los datos en memoria de cada tipo como pide la consigna
-    */
-    private List<Producto> productos = new ArrayList<>();
-    private List<Vendedor> vendedores = new ArrayList<>();
-    private List<Venta> ventas = new ArrayList<>();
+    //simulo persistenca en una ddb real aca
+    private final ProductoRepository productoRepo = new ProductoRepository();
+    private final VendedorRepository vendedorRepo = new VendedorRepository();
+    private final VentaRepository ventaRepo = new VentaRepository();
 
-    //los metodos para manipular los datos
-    public void agregarProducto(Producto producto){
-        productos.add(producto);
-        System.out.println( "Producto agregado correctamente!");
+    //Productos
+    public void agregarProducto(Producto producto) {
+        if(producto.getPrecio() <= 0){
+            throw new VentaInvalidaException("El precio del producto debe ser mayor a 0");
+        }
+        productoRepo.save(producto);
     }
 
-    public void agregarVendedor(Vendedor vendedor){
-        vendedores.add(vendedor);
-        System.out.println( "Vendedor agregado correctamente!");
+    public List <Producto> mostrarProductos() {
+       return productoRepo.findAll();
     }
 
-    //muestro los productos con un for each buena idea me tiro de validar si hay datos o no cargados
-    public void mostrarProductos(){
-
-        if(productos.isEmpty()){
-
-            System.out.println("No hay productos cargados");
-            return;
+    // Vendedores
+    public void agregarVendedor(Vendedor vendedor) {
+        if (vendedor.getSueldo() <= 0) {
+            throw new VentaInvalidaException("El sueldo ingresado debe ser mayor a 0");
         }
-
-        for(Producto producto : productos){
-
-            System.out.println(producto);
-        }
+        vendedorRepo.save(vendedor);
     }
 
-    public void mostrarVentas(){
-
-        if(ventas.isEmpty()){
-            System.out.println("No hay ventas cargadas");
-            return;
-        }
-        for(Venta venta : ventas){
-
-            System.out.println(venta);
-        }
+    public List<Vendedor> mostrarVendedores() {
+        return vendedorRepo.findAll();
     }
 
-    public void mostrarVendedores(){
+    //Ventas //voy a tratar de ponerle mas onda a mis exceptions
+    public void registrarVenta(Integer codigoProducto, Integer codigoVendedor) {
 
-        if(vendedores.isEmpty()){
-            System.out.println("No hay vendedores cargados");
-            return;
+        Producto producto = productoRepo.findByCodigo(codigoProducto);
+        Vendedor vendedor = vendedorRepo.findByCodigo(codigoVendedor);
+        if (producto == null) {
+            throw new ProductoNoEncontradoException("No existe un producto con ese codigo: " + codigoProducto);
         }
-        for(Vendedor vendedor:vendedores){
-            System.out.println(vendedor);
+        if (vendedor == null) {
+            throw new VendedorNoEncontradoException("No existe un vendedor con ese codigo: " + codigoVendedor);
         }
+        Venta venta = new Venta(producto, vendedor);
+        ventaRepo.save(venta);
     }
 
-    public void registrarVenta(Integer codigoProducto, Integer codigoVendedor){
-
-        Producto productoEncontrado = null;
-        Vendedor vendedorEncontrado = null;
-
-        // buscar producto
-        for(Producto producto : productos){
-
-            if(producto.getCodigo().equals(codigoProducto)){
-
-                productoEncontrado = producto;
-            }
-        }
-
-        // buscar vendedor
-        for(Vendedor vendedor : vendedores){
-            if(vendedor.getCodigo().equals(codigoVendedor)){
-                vendedorEncontrado = vendedor;
-            }
-        }
-
-        // validar
-        if(productoEncontrado == null){
-            System.out.println("Producto no encontrado");
-            return;
-        }
-
-        if(vendedorEncontrado == null){
-            System.out.println("Vendedor no encontrado");
-            return;
-        }
-
-        // crear venta
-        Venta venta = new Venta(productoEncontrado, vendedorEncontrado);
-        ventas.add(venta);
-        System.out.println("Venta registrada correctamente");
+    public List<Venta> mostrarVentas() {
+        return ventaRepo.findAll();
     }
 
-    //metodos para busquedas que implemente x categoria, x nombre
-
-    public void buscarProductoPorCategoria(String categoria){
-        boolean encontrado = false;
-        for(Producto producto : productos){
-            if(producto.getCategoria().equalsIgnoreCase(categoria)){
-                System.out.println(producto);
-                encontrado = true;
-            }
+    public List<Producto> buscarProductoPorCategoria(String categoria) {
+        return productoRepo.findAll()
+                .stream()
+                .filter(p -> p.getCategoria().equalsIgnoreCase(categoria))
+                .toList();
+    }
+    public List<Producto> buscarProductoPorNombre(String nombre) {
+       return productoRepo.findAll()
+               .stream()
+               .filter(p->p.getNombre().equalsIgnoreCase(nombre))
+               .toList();
+    }
+    public Producto buscarProductoPorCodigo(Integer codigo) {
+        Producto producto = productoRepo.findByCodigo(codigo);
+        if (producto == null) {
+            throw new ProductoNoEncontradoException("No existe producto con el código: " + codigo);
         }
-        if(!encontrado){
-            System.out.println("No se encontraron productos de esa categoría");
-        }
+        return producto;
     }
 
-    public void buscarProductoPorNombre(String nombre){
-        boolean encontrado = false;
-        for(Producto producto : productos){
-            if(producto.getNombre().equalsIgnoreCase(nombre)){
-                System.out.println(producto);
-                encontrado = true;
-            }
-        }
-        if(!encontrado){
-            System.out.println("No se encontró un producto con ese nombre");
-        }
-    }
-
-    /*
-    public void buscarProductoPorCodigo(Integer codigo){
-        boolean encontrado = false;
-        for(Producto producto : productos){
-            if(producto.getCodigo().equals(codigo)){
-                System.out.println(producto);
-            } else if (!encontrado) {
-                System.out.println("No se enconttro un producto con ese codigo");
-            }
-
-        }
-
-       este metodo me equivoque esta mal
-     */
-
-    public void buscarProductoPorCodigo(Integer codigo){
-        boolean encontrado = false;
-        for(Producto producto : productos){
-            if(producto.getCodigo().equals(codigo)){
-                System.out.println(producto);
-                encontrado = true;
-            }
-        }
-        if(!encontrado){
-            System.out.println("No se encontró un producto con ese código");
-        }
-    }
-
-    public void calcularComision(Integer codigoVendedor){
+    public Double calcularComision(Integer codigoVendedor) {
         int cantidadVentas = 0;
-        Double totalVendido = 0.0;
-        for(Venta venta : ventas){
-            if(venta.getVendedor().getCodigo().equals(codigoVendedor)){
+        double totalVendido = 0.0;
+        for (Venta venta : ventaRepo.findAll()) {
+            if (venta.getVendedor().getCodigo().equals(codigoVendedor)) {
                 cantidadVentas++;
                 totalVendido += venta.getProducto().getPrecio();
             }
         }
-        if(cantidadVentas == 0){
-            System.out.println("El vendedor no tiene ventas registradas");
-            return;
+        if (cantidadVentas == 0) {
+            throw new VentaInvalidaException("El vendedor no tiene ventas registradas");
         }
-        Double comision;
-        if(cantidadVentas <= 2){
-            comision = totalVendido * 0.05;
-        }
-        else {
-            comision = totalVendido * 0.10;
-        }
-        System.out.println("Cantidad de ventas: " + cantidadVentas);
-        System.out.println("Total vendido: $" + totalVendido);
-        System.out.println("Comision total: $" + comision);
+        return (cantidadVentas <= 2)
+                ? totalVendido * 0.05
+                : totalVendido * 0.10;
     }
 
-
 }
-
-
-
-
-
