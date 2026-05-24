@@ -1,7 +1,6 @@
 package com.besysoft.model;
 
 public class Venta {
-
     //instancio Objetos del tipo especificado
     // lo que crea la relacion entre venta, producto y vendedor
     // (simula lo que seria una inyeccion de dependencias en Spring)
@@ -14,7 +13,7 @@ public class Venta {
         this.vendedor = vendedor;
     }
 
-    //voy a crear unos getters setters no conviene porque no deberian poder cambiarse las ventas registradas
+    //voy a crear getters, setters no es recomendable porque no deberian poder cambiarse las ventas ya realiuzadas
 
     public Producto getProducto(){
         return producto;
@@ -24,7 +23,7 @@ public class Venta {
         return vendedor;
     }
 
-    //le piso el toString para mostarlo mejor por consola
+    //le sobrescribo el toString para mostarlo mejor por consola
     @Override
     public String toString(){
         return "Venta{ " +
