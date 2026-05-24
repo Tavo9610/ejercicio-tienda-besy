@@ -19,7 +19,6 @@ public class Main {
         int opcion = -1;
 
         do {
-
             System.out.println("\n===== TIENDA BESYSOFT =====");
             System.out.println("1 - Agregar producto");
             System.out.println("2 - Agregar vendedor");
@@ -32,7 +31,6 @@ public class Main {
             System.out.println("9 - Buscar producto por código");
             System.out.println("10 - Calcular comisión");
             System.out.println("0 - Salir");
-
             try {
                 opcion = entrada.nextInt();
                 entrada.nextLine();

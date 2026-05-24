@@ -29,7 +29,7 @@ public class TiendaService {
     }
 
     public List <Producto> mostrarProductos() {
-       return productoRepo.findAll();
+        return productoRepo.findAll();
     }
 
     // Vendedores
