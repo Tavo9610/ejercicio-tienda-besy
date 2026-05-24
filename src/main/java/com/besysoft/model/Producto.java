@@ -17,7 +17,6 @@ public class Producto {
     public Integer getCodigo(){
         return codigo;
     }
-
     public String getNombre(){
         return nombre;
     }
