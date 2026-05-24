@@ -74,7 +74,7 @@ categoria
 
 - Un **Producto** puede aparecer en muchas ventas (1:N)
 - Un **Vendedor** puede realizar muchas ventas (1:N)
-- Cada **Venta** tiene exactamente un producto y un vendedor (la uso como intermedia para generar la relacion)
+- Cada **Venta** tiene exactamente un producto y un vendedor
 
 ## Cómo ejecutarlo o correrlo
 
