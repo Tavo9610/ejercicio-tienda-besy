@@ -23,7 +23,7 @@ public class TiendaService {
             throw new VentaInvalidaException("El codigo del producto debe ser mayor a 0");
         }
         if(productoRepo.findByCodigo(producto.getCodigo()) != null){
-            throw new VentaInvalidaException("Ya existe un producto con el codgio: " + producto.getCodigo());
+            throw new VentaInvalidaException("Ya existe un producto con el codigo ingresado: " + producto.getCodigo());
         }
         productoRepo.save(producto);
     }
@@ -46,6 +46,10 @@ public class TiendaService {
         if(!vendedor.getNombre().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")){ //me sugirieron usar regex en estos casos yo no lo conocia
             throw new VentaInvalidaException("El nombre del vendedor solo puede contener letras y espacios");
         }
+        if(vendedorRepo.findByCodigo(vendedor.getCodigo()) != null){
+            throw new VentaInvalidaException("Ya existe un vendedor con el codigo ingresado: " + vendedor.getCodigo());
+        }
+
         vendedorRepo.save(vendedor);
     }
 

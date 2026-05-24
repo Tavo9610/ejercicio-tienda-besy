@@ -59,6 +59,7 @@ public class Main {
                         }
                     }
                     case 2 -> {
+                        try{
                         System.out.println("Código:");
                         int codigo = entrada.nextInt();
                         entrada.nextLine();
@@ -68,6 +69,9 @@ public class Main {
                         double sueldo = entrada.nextDouble();
                         service.agregarVendedor(new Vendedor(codigo, nombre, sueldo));
                         System.out.println("Vendedor agregado correctamente");
+                        } catch (VentaInvalidaException e){
+                            System.out.println("Error:" + e.getMessage());
+                        }
                     }
                     case 3 -> {
                         List<Producto> productos = service.mostrarProductos();
