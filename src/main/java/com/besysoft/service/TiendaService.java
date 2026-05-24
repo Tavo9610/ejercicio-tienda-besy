@@ -14,7 +14,7 @@ public class TiendaService {
     private final VendedorRepository vendedorRepo = new VendedorRepository();
     private final VentaRepository ventaRepo = new VentaRepository();
 
-    //Productos
+    //productos
     public void agregarProducto(Producto producto) {
         if(producto.getPrecio() <= 0){
             throw new VentaInvalidaException("El precio del producto debe ser mayor a 0");
@@ -32,7 +32,7 @@ public class TiendaService {
         return productoRepo.findAll();
     }
 
-    // Vendedores
+    // vendedores
     public void agregarVendedor(Vendedor vendedor) {
         if (vendedor.getSueldo() <= 0) {
             throw new VentaInvalidaException("El sueldo ingresado debe ser mayor a 0");
@@ -53,16 +53,16 @@ public class TiendaService {
         return vendedorRepo.findAll();
     }
 
-    //Ventas
+    //ventas
     public void registrarVenta(Integer codigoProducto, Integer codigoVendedor) {
 
         Producto producto = productoRepo.findByCodigo(codigoProducto);
         Vendedor vendedor = vendedorRepo.findByCodigo(codigoVendedor);
         if (producto == null) {
-            throw new ProductoNoEncontradoException("No existe un producto con ese codigo: " + codigoProducto);
+            throw new ProductoNoEncontradoException("No existe un producto con ese codigo ");
         }
         if (vendedor == null) {
-            throw new VendedorNoEncontradoException("No existe un vendedor con ese codigo: " + codigoVendedor);
+            throw new VendedorNoEncontradoException("No existe un vendedor con ese codigo");
         }
         Venta venta = new Venta(producto, vendedor);
         ventaRepo.save(venta);
@@ -72,7 +72,7 @@ public class TiendaService {
         return ventaRepo.findAll();
     }
 
-    // practique un poco el uso de lambdas
+    // use stream con exp lambdas
     public List<Producto> buscarProductoPorCategoria(String categoria) {
         return productoRepo.findAll()
                 .stream()
@@ -88,7 +88,7 @@ public class TiendaService {
     public Producto buscarProductoPorCodigo(Integer codigo) {
         Producto producto = productoRepo.findByCodigo(codigo);
         if (producto == null) {
-            throw new ProductoNoEncontradoException("No existe producto con el código: " + codigo);
+            throw new ProductoNoEncontradoException("No existe un producto con ese código");
         }
         return producto;
     }
@@ -103,14 +103,14 @@ public class TiendaService {
             }
         }
         if(vendedorRepo.findByCodigo(codigoVendedor) == null){
-            throw new VentaInvalidaException("No existe un vendedor con ese codigo: " + codigoVendedor);
+            throw new VentaInvalidaException("No existe un vendedor con ese codigo");
         }
 
         if (cantidadVentas == 0) {
             throw new VentaInvalidaException("El vendedor no tiene ventas registradas");
         }
 
-        return (cantidadVentas <= 2) ? totalVendido * 0.05 : totalVendido * 0.10;
+        return (cantidadVentas <= 2) ? totalVendido * 0.05 : totalVendido * 0.10; //op ternario que me sugirieron
     }
 
 }
