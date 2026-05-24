@@ -32,6 +32,11 @@ public class Main {
             System.out.println("10 - Calcular comisión");
             System.out.println("0 - Salir");
             try {
+                /*
+            atrapo en el main las excepciones
+            (se que no es lo correcto, pero lo hice para que en caso de que se
+            lanze una exception la atrape y no rompa el flujo de ejecucion del codigo y se detenga
+            */
                 opcion = entrada.nextInt();
                 entrada.nextLine();
                 switch (opcion) {
