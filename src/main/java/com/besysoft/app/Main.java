@@ -144,7 +144,6 @@ public class Main {
                             System.out.println("Código vendedor:");
                             int codigoComision = entrada.nextInt();
                             service.mostrarResumenComision(codigoComision);
-
                         } catch (VentaInvalidaException | VendedorNoEncontradoException e) {
                             System.out.println("Error: " + e.getMessage());
                         }
@@ -155,7 +154,7 @@ public class Main {
                 }
 
             } catch (InputMismatchException e) {
-                System.out.println("Error: debe ingresar un número válido y no texto");
+                System.out.println("Debe ingresar un número válido y no texto");
                 entrada.nextLine();
                 opcion = -1;
             }
