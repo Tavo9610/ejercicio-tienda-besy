@@ -7,6 +7,7 @@ sin frameworks externos.
 
 - Java 21
 - Maven como gestor y build tool
+- IDE utilizado IntelliJidea
 
 ## Estructura basica del proyecto
 
@@ -29,6 +30,21 @@ src/main/java/com/besysoft/
     ├── VendedorNoEncontradoException.java
     └── VentaInvalidaException.java
 ```
+## Funcionalidades
+
+| Opción | Descripción                      |
+|--------|----------------------------------|
+| 1      | Agregar producto                 |
+| 2      | Agregar vendedor                 |
+| 3      | Mostrar todos los productos      |
+| 4      | Mostrar todos los vendedores     |
+| 5      | Registrar venta                  |
+| 6      | Mostrar todas las ventas         |
+| 7      | Buscar producto por categoría    |
+| 8      | Buscar producto por nombre       |
+| 9      | Buscar producto por código       |
+| 10     | Calcular comisión de un vendedor |
+| 0      | Salir                            |
 
 ## Reglas de negocio
 
