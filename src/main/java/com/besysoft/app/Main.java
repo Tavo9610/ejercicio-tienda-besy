@@ -148,7 +148,7 @@ public class Main {
                             int codigoComision = entrada.nextInt();
                             service.mostrarResumenComision(codigoComision);
 
-                        } catch (VentaInvalidaException e) {
+                        } catch (VentaInvalidaException | VendedorNoEncontradoException e) {
                             System.out.println("Error: " + e.getMessage());
                         }
                     }

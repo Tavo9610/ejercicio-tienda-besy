@@ -46,12 +46,12 @@ src/main/java/com/besysoft/
 | 10     | Calcular comisión de un vendedor |
 | 0      | Salir                            |
 
-## Reglas de negocio
+## Reglas de negocio/Validaciones
 
 - El precio de un producto debe ser mayor a 0
 - El sueldo de un vendedor debe ser mayor a 0
-- El nombre del vendedor solo puede contener letras y espacios
-- No se permiten códigos duplicados de productos (se valida)
+- El nombre del vendedor y del producto solo pueden contener letras y espacios
+- No se permiten códigos duplicados de productos ni de vendedores
 - **Comisión:** 5% del total vendido si realizó hasta 2 ventas, 10% si realizó más de 2
 
 ## Diagrama de Entidad Relación (como lo represento en una ddbb relacional)

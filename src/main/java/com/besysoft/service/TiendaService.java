@@ -25,6 +25,9 @@ public class TiendaService {
         if(productoRepo.findByCodigo(producto.getCodigo()) != null){
             throw new VentaInvalidaException("Ya existe un producto con el codigo ingresado: " + producto.getCodigo());
         }
+        if(!producto.getNombre().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")){
+            throw new VentaInvalidaException("El nombre del producto solo puede contener letras y espacios");
+        }
         productoRepo.save(producto);
     }
 
