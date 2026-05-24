@@ -102,11 +102,12 @@ public class TiendaService {
                 totalVendido += venta.getProducto().getPrecio();
             }
         }
-        if (cantidadVentas == 0) {
-            throw new VentaInvalidaException("El vendedor no tiene ventas registradas");
-        }
         if(vendedorRepo.findByCodigo(codigoVendedor) == null){
             throw new VentaInvalidaException("No existe un vendedor con ese codigo: " + codigoVendedor);
+        }
+
+        if (cantidadVentas == 0) {
+            throw new VentaInvalidaException("El vendedor no tiene ventas registradas");
         }
 
         return (cantidadVentas <= 2) ? totalVendido * 0.05 : totalVendido * 0.10;
