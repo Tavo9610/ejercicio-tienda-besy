@@ -133,11 +133,8 @@ public class Main {
                         try {
                             System.out.println("Código:");
                             int codigo = entrada.nextInt();
-
                             Producto producto = service.buscarProductoPorCodigo(codigo);
-
                             System.out.println(producto);
-
                         } catch (ProductoNoEncontradoException e) {
                             System.out.println("Error: " + e.getMessage());
                         }
