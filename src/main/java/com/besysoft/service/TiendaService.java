@@ -93,24 +93,44 @@ public class TiendaService {
         return producto;
     }
 
-    public Double calcularComision(Integer codigoVendedor) {
+    public void mostrarResumenComision(Integer codigoVendedor){
+
+        Vendedor vendedor = vendedorRepo.findByCodigo(codigoVendedor);
+
+        if(vendedor == null){
+            throw new VendedorNoEncontradoException("No existe un vendedor con ese codigo");
+        }
+
         int cantidadVentas = 0;
         double totalVendido = 0.0;
-        for (Venta venta : ventaRepo.findAll()) {
-            if (venta.getVendedor().getCodigo().equals(codigoVendedor)) {
+
+        for(Venta venta:ventaRepo.findAll()){
+            if(venta.getVendedor().getCodigo().equals(codigoVendedor)){
                 cantidadVentas++;
                 totalVendido += venta.getProducto().getPrecio();
             }
         }
-        if(vendedorRepo.findByCodigo(codigoVendedor) == null){
-            throw new VentaInvalidaException("No existe un vendedor con ese codigo");
-        }
-
-        if (cantidadVentas == 0) {
+        if(cantidadVentas == 0){
             throw new VentaInvalidaException("El vendedor no tiene ventas registradas");
         }
+        double porcentaje;
+        if(cantidadVentas <= 2){
+            porcentaje = 0.05;
+        } else {
+            porcentaje = 0.10;
+        }
+        double comision = totalVendido * porcentaje;
+        double sueldoTotal = vendedor.getSueldo() + comision;
 
-        return (cantidadVentas <= 2) ? totalVendido * 0.05 : totalVendido * 0.10; //op ternario que me sugirieron
+        System.out.println("\n===== RESUMEN TOTAL =====");
+        System.out.println("Vendedor: " + vendedor.getNombre());
+        System.out.println("Cantidad ventas: " + cantidadVentas);
+        System.out.println("Total vendido: $" + totalVendido);
+        System.out.println("Porcentaje comision: " + (porcentaje * 100) + "%");
+        System.out.println("Comision ganada: $" + comision);
+        System.out.println("Sueldo total + comision: " + sueldoTotal);
     }
+
+
 
 }

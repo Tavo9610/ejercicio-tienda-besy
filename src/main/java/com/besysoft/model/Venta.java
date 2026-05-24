@@ -23,12 +23,14 @@ public class Venta {
 
     //le sobrescribo el toString para mostarlo mejor por consola
     @Override
-    public String toString(){
-        return "Venta{ " +
-                "producto= " + producto.getNombre()+
-                ", vendedor= " + vendedor.getNombre()+
-                '}';
+    public String toString() {
 
+        return "Venta{" +
+                "producto='" + producto.getNombre() + '\'' +
+                ", precio=$" + producto.getPrecio() +
+                ", categoria='" + producto.getCategoria() + '\'' +
+                ", vendedor='" + vendedor.getNombre() + '\'' +
+                '}';
     }
 
 

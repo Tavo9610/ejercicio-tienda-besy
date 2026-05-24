@@ -141,10 +141,8 @@ public class Main {
                     case 10 -> {
                         try {
                             System.out.println("Código vendedor:");
-                            int codigo = entrada.nextInt();
-
-                            Double comision = service.calcularComision(codigo);
-                            System.out.println("La Comisión total de sus ventas es: " + comision);
+                            int codigoComision = entrada.nextInt();
+                            service.mostrarResumenComision(codigoComision);
 
                         } catch (VentaInvalidaException e) {
                             System.out.println("Error: " + e.getMessage());
