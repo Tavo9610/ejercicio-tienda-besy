@@ -19,6 +19,12 @@ public class TiendaService {
         if(producto.getPrecio() <= 0){
             throw new VentaInvalidaException("El precio del producto debe ser mayor a 0");
         }
+        if(producto.getCodigo()<0){
+            throw new VentaInvalidaException("El codigo del producto debe ser mayor a 0");
+        }
+        if(productoRepo.findByCodigo(producto.getCodigo()) != null){
+            throw new VentaInvalidaException("Ya existe un producto con el codgio: " + producto.getCodigo());
+        }
         productoRepo.save(producto);
     }
 
@@ -31,6 +37,15 @@ public class TiendaService {
         if (vendedor.getSueldo() <= 0) {
             throw new VentaInvalidaException("El sueldo ingresado debe ser mayor a 0");
         }
+        if (vendedor.getCodigo()<0){
+            throw new VentaInvalidaException("El codigo de vendedor debe ser mayor a 0");
+        }
+        if(vendedor.getNombre() == null || vendedor.getNombre().isBlank()){
+            throw new VentaInvalidaException("El nombre del vendedor no puede estar vacio");
+        }
+        if(!vendedor.getNombre().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")){ //me sugirieron usar regex en estos casos yo no lo conocia
+            throw new VentaInvalidaException("El nombre del vendedor solo puede contener letras y espacios");
+        }
         vendedorRepo.save(vendedor);
     }
 
@@ -38,7 +53,7 @@ public class TiendaService {
         return vendedorRepo.findAll();
     }
 
-    //Ventas //voy a tratar de ponerle mas onda a mis exceptions
+    //Ventas
     public void registrarVenta(Integer codigoProducto, Integer codigoVendedor) {
 
         Producto producto = productoRepo.findByCodigo(codigoProducto);
@@ -57,6 +72,7 @@ public class TiendaService {
         return ventaRepo.findAll();
     }
 
+    // practique un poco el uso de lambdas
     public List<Producto> buscarProductoPorCategoria(String categoria) {
         return productoRepo.findAll()
                 .stream()
@@ -89,9 +105,11 @@ public class TiendaService {
         if (cantidadVentas == 0) {
             throw new VentaInvalidaException("El vendedor no tiene ventas registradas");
         }
-        return (cantidadVentas <= 2)
-                ? totalVendido * 0.05
-                : totalVendido * 0.10;
+        if(vendedorRepo.findByCodigo(codigoVendedor) == null){
+            throw new VentaInvalidaException("No existe un vendedor con ese codigo: " + codigoVendedor);
+        }
+
+        return (cantidadVentas <= 2) ? totalVendido * 0.05 : totalVendido * 0.10;
     }
 
 }
